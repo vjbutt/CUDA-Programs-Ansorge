@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Chapter01/cpusum/.vs/cpusum_vs2022
+/Chapter01/cpusum/x64
+/Chapter01/ompsum/.vs/ompsum_vs2022/FileContentIndex
+/Chapter01/ompsum/x64/Release
+/Chapter01/ompsum/.vs/ompsum_vs2022/v17
