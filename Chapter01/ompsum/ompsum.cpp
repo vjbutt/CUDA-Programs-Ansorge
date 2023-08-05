@@ -43,17 +43,22 @@ int main(int argc,char *argv[])
 	cx::timer tim;
 	double omp_sum = 0.0;
 
-	omp_set_num_threads(threads);                   // OpenMP 
-    #pragma omp parallel for reduction (+:omp_sum)  // OpenMP
-	for(int step = 0; step < steps; step++){
-		float x = step_size*step;
-		omp_sum += sinsum(x,terms);   // get sum of Taylor series
+	for (int t = 1; t <= threads; t++)
+	{
+		omp_set_num_threads(t);                         // OpenMP 
+		#pragma omp parallel for reduction (+:omp_sum)  // OpenMP
+		for (int step = 0; step < steps; step++) {
+			float x = step_size * step;
+			omp_sum += sinsum(x, terms);   // get sum of Taylor series
+		}
+		double cpu_time = tim.lap_ms(); // get elapsed time
+		// Trapezoidal Rule correction for end points
+		omp_sum -= 0.5 * (sinsum(0.0, terms) + sinsum(pi, terms));
+		omp_sum *= step_size;
+		printf("omp sum = %.10f,steps %d terms %d time %.3f ms, threads %d\n",
+			omp_sum, steps, terms, cpu_time, t);
+
 	}
-	double cpu_time = tim.lap_ms(); // get elapsed time
-	// Trapezoidal Rule correction for end points
-	omp_sum -= 0.5*(sinsum(0.0,terms)+sinsum(pi,terms));
-	omp_sum *= step_size;
-	printf("omp sum = %.10f,steps %d terms %d time %.3f ms\n",
-		omp_sum,steps,terms,cpu_time);
+
 	return 0;
 }
